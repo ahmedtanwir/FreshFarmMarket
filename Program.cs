@@ -143,7 +143,8 @@ app.UseEndpoints(endpoints =>
     // Fallback for any unmatched routes (redirects to error page with 404 code)
     endpoints.MapFallback(async context =>
     {
-        logger.LogWarning($"Unmatched route: {context.Request.Path}. Redirecting to /Error?statusCode=404");
+        logger.LogWarning("Unmatched route: {Route}. Redirecting to /Error?statusCode=404", context.Request.Path.Value);
+
         context.Response.Redirect("/Error?statusCode=404");
         await Task.CompletedTask;
     });
@@ -173,7 +174,15 @@ app.Use(async (context, next) =>
     if (context.Request.Path.StartsWithSegments("/Error"))
     {
         var statusCode = context.Request.Query["statusCode"];
-        logger.LogWarning($"User redirected to Error page. Status Code: {statusCode}");
+        if (int.TryParse(statusCode, out int parsedStatusCode))
+        {
+            logger.LogWarning("User redirected to Error page. Status Code: {StatusCode}", parsedStatusCode);
+        }
+        else
+        {
+            logger.LogWarning("User redirected to Error page with an invalid status code.");
+        }
+
     }
     await next();
 });
