@@ -1,0 +1,147 @@
+﻿@page
+@model FreshFarmMarket.Pages.RegisterModel
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Register";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form method="post" enctype="multipart/form-data">
+    <!-- Full Name Field -->
+    <div class="form-group">
+        <label asp-for="FullName" class="form-label"></label>
+        <input asp-for="FullName" class="form-control" />
+        <span asp-validation-for="FullName" class="text-danger"></span>
+    </div>
+
+    <!-- Email Field -->
+    <div class="form-group">
+        <label asp-for="Email" class="form-label"></label>
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+
+    <!-- Credit Card Number Field -->
+    <div class="form-group">
+        <label asp-for="CreditCardNo" class="form-label"></label>
+        <input asp-for="CreditCardNo" class="form-control" type="password" aria-label="Credit Card Number" />
+        <span asp-validation-for="CreditCardNo" class="text-danger"></span>
+    </div>
+
+    <!-- Gender Field -->
+    <div class="form-group">
+        <label asp-for="Gender" class="form-label"></label>
+        <select asp-for="Gender" class="form-control" aria-label="Select Gender">
+            <option value="">Select Gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+        </select>
+        <span asp-validation-for="Gender" class="text-danger"></span>
+    </div>
+
+    <!-- Mobile Number Field -->
+    <div class="form-group">
+        <label asp-for="MobileNo" class="form-label"></label>
+        <input asp-for="MobileNo" class="form-control" type="tel" aria-label="Mobile Number" />
+        <span asp-validation-for="MobileNo" class="text-danger"></span>
+    </div>
+
+    <!-- Delivery Address Field -->
+    <div class="form-group">
+        <label asp-for="DeliveryAddress" class="form-label"></label>
+        <input asp-for="DeliveryAddress" class="form-control" />
+        <span asp-validation-for="DeliveryAddress" class="text-danger"></span>
+    </div>
+
+    <!-- Password Field -->
+    <div class="form-group">
+        <label asp-for="Password" class="form-label"></label>
+        <input asp-for="Password" type="password" id="password" class="form-control" onkeyup="checkPasswordStrength()" />
+        <span asp-validation-for="Password" class="text-danger"></span>
+        <!-- Password Strength Feedback -->
+        <div id="password-strength-status"></div>
+        <div id="password-strength-bar" style="width: 0%; height: 10px; background-color: #e0e0e0;"></div>
+    </div>
+
+    <!-- Confirm Password Field -->
+    <div class="form-group">
+        <label asp-for="ConfirmPassword" class="form-label"></label>
+        <input asp-for="ConfirmPassword" type="password" class="form-control" />
+        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+    </div>
+
+    <!-- About Me Field -->
+    <div class="form-group">
+        <label asp-for="AboutMe" class="form-label"></label>
+        <textarea asp-for="AboutMe" class="form-control" aria-label="Tell us about yourself"></textarea>
+        <span asp-validation-for="AboutMe" class="text-danger"></span>
+    </div>
+
+    <!-- Photo Upload Field -->
+    <div class="form-group">
+        <label asp-for="Photo" class="form-label"></label>
+        <input asp-for="Photo" type="file" class="form-control" aria-label="Upload your photo" />
+        <span asp-validation-for="Photo" class="text-danger"></span>
+    </div>
+
+    <!-- Submit Button -->
+    <button type="submit" class="btn btn-primary">Register</button>
+</form>
+
+<!-- Display validation errors -->
+<partial name="_ValidationSummary" model="ModelState" />
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Function to check password strength
+        function checkPasswordStrength() {
+            const password = document.getElementById('password').value;
+            const strengthBar = document.getElementById('password-strength-bar');
+            const strengthStatus = document.getElementById('password-strength-status');
+            let strength = 0;
+
+            // Check for length
+            if (password.length >= 8) strength += 1;
+            if (password.length >= 12) strength += 1;
+
+            // Check for mixed case
+            if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength += 1;
+
+            // Check for numbers
+            if (/\d/.test(password)) strength += 1;
+
+            // Check for special characters
+            if (/[!$%^&*(),.?":{}|<>]/.test(password)) strength += 1;
+
+            // Update the strength bar and status
+            switch (strength) {
+                case 0:
+                    strengthBar.style.backgroundColor = '#e0e0e0';
+                    strengthStatus.innerHTML = 'Weak';
+                    break;
+                case 1:
+                    strengthBar.style.backgroundColor = '#f00';
+                    strengthStatus.innerHTML = 'Weak';
+                    break;
+                case 2:
+                    strengthBar.style.backgroundColor = '#ff0';
+                    strengthStatus.innerHTML = 'Medium';
+                    break;
+                case 3:
+                    strengthBar.style.backgroundColor = '#0f0';
+                    strengthStatus.innerHTML = 'Strong';
+                    break;
+                case 4:
+                    strengthBar.style.backgroundColor = '#0c0';
+                    strengthStatus.innerHTML = 'Very Strong';
+                    break;
+            }
+
+            // Adjust the width of the bar
+            strengthBar.style.width = (strength * 25) + '%';
+        }
+    </script>
+}

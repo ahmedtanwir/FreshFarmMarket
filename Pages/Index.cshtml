@@ -1,0 +1,54 @@
+﻿@page
+@model FreshFarmMarket.Pages.IndexModel
+@{
+    Layout = "_Layout"; // Ensure the page uses the shared layout
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="container mt-5">
+    <div class="text-center">
+        <h1 class="display-4">Welcome to FreshFarmMarket</h1>
+        <p class="lead">Your go-to marketplace for fresh produce.</p>
+        <p>
+            Learn more about
+            <a href="https://learn.microsoft.com/aspnet/core" class="btn btn-primary">ASP.NET Core</a>
+        </p>
+    </div>
+
+    @if (Model.CurrentUser != null)
+    {
+        <div class="card mx-auto mt-4" style="max-width: 500px;">
+            <div class="card-header bg-success text-white text-center">
+                <h3>Your Profile Information</h3>
+            </div>
+            <div class="card-body">
+                <p><strong>Full Name:</strong> @Model.CurrentUser.FullName</p>
+                <p><strong>Gender:</strong> @Model.CurrentUser.Gender</p>
+                <p><strong>Mobile Number:</strong> @Model.CurrentUser.MobileNo</p>
+                <p><strong>Delivery Address:</strong> @Model.CurrentUser.DeliveryAddress</p>
+                <p><strong>Credit Card Number:</strong> @GetMaskedCreditCard(Model.DecryptedCreditCardNo)</p>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="text-center mt-4">
+            <p class="alert alert-warning">Please log in to view your profile information.</p>
+            <a href="/Login" class="btn btn-success">Log In</a>
+        </div>
+    }
+</div>
+
+@functions {
+    // Helper function to mask the credit card number
+    public string GetMaskedCreditCard(string decryptedCreditCardNo)
+    {
+        if (string.IsNullOrEmpty(decryptedCreditCardNo))
+        {
+            return "No credit card data available.";
+        }
+
+        // Return the last 4 digits and mask the rest with asterisks
+        return "**** **** **** " + decryptedCreditCardNo.Substring(decryptedCreditCardNo.Length - 4);
+    }
+}
